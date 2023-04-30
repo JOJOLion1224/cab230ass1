@@ -1,0 +1,9 @@
+.NavList li {
+    display: inline;
+    margin: 2vw;
+}
+
+.NavLink {
+    text-decoration: none;
+    color: black;
+}
