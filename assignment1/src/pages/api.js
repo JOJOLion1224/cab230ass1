@@ -1,12 +1,16 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-function useMovies() {
+function useMovies(text = '', year = '') {
     const [movies, setMovies] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        fetch("http://sefdb02.qut.edu.au:3000/movies/search")
+        const titleParam = text ? `title=${encodeURIComponent(text)}` : '';
+        const yearParam = year && year !== 'any year' ? `year=${encodeURIComponent(year)}` : '';
+        const queryParams = [titleParam, yearParam].filter(Boolean).join('&');
+
+        fetch(`http://sefdb02.qut.edu.au:3000/movies/search?${queryParams}`)    
         .then((res) => res.json())
         .then((res) => res.data)
         .then((movies) =>
@@ -17,7 +21,8 @@ function useMovies() {
                     imdbrating: movie.imdbRating,
                     rottentomatoes: movie.rottenTomatoesRating,
                     metacritic: movie.metacriticRating,
-                    rated: movie.classification
+                    rated: movie.classification,
+                    imdbid: movie.imdbID
                 };
             })
         )
@@ -30,7 +35,7 @@ function useMovies() {
         .finally(() => {
             setIsLoading(false);
         })
-    }, []);
+    }, [text, year]);
 
     if (isLoading) {
         return <p>Loading movies... ...</p>;
