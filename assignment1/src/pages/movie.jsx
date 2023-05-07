@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Button, Badge, ListGroup, ListGroupItem } from 'reactstrap'
-import { useNavigate, useSearchParams, useLocation } from "react-router-dom";
+import { Badge, ListGroup, ListGroupItem } from 'reactstrap'
+import { useNavigate, useLocation } from "react-router-dom";
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import 'bootstrap/dist/css/bootstrap.css';
 
 export default function Movie() {
-    const navigate = useNavigate();
     const location = useLocation();
     const id = location.state.data;
+    const navigate = useNavigate();
     const [ isLoading, setIsLoading ] = useState(true);
     const [ error, setError ] = useState(null);
     const [ movieInfo, setMovieInfo ] = useState([]);
@@ -20,7 +20,6 @@ export default function Movie() {
         fetch(`http://sefdb02.qut.edu.au:3000/movies/data/${id}`)    
         .then((res) => res.json())
         .then(movie => {
-            console.log(movie);
             setMovieInfo(movie);
             setStaffInfo(movie.principals);
         })
@@ -50,8 +49,13 @@ export default function Movie() {
         { headerName: 'Role', field: 'category', sortable: true, filter: true},
         { headerName: 'Name', field: 'name', sortable: true, filter: true},
         { headerName: 'Characters', field: 'characters', sortable: true, filter: true},
-        { headerName: 'ID', field: 'actorid', hide:true }
+        { headerName: 'ID', field: 'personid', hide:true }
     ];
+
+    function rowClick(row) {
+
+        navigate(`/people/${row.data.id}`, {state: {data: row.data.id}});
+    }
 
     return (
         <div className="container">
@@ -105,6 +109,7 @@ export default function Movie() {
                         rowData={staffInfo}
                         pagination={true}
                         paginationPageSize={15}
+                        onRowClicked={(row) => rowClick(row)}
                     />              
                 </div>
                 <div style={{ marginLeft: '3vw' }}>

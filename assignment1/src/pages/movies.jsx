@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import useMovies from "./api";
 import SearchBar from '../components/SearchBar';
 import { AgGridReact } from 'ag-grid-react';
@@ -11,8 +11,7 @@ function Movies() {
     const [ selectedYear, setSelectedYear ] = useState('')
     const { movies, isLoading, error } = useMovies(search, selectedYear);
 
-    const [ rowData, setRowData ] = useState({});
-    const nagivate = useNavigate();
+    const navigate = useNavigate();
 
     const columns = [
             { headerName: 'Title', field: 'title', sortable: true, filter: true},
@@ -25,7 +24,7 @@ function Movies() {
     ]
 
     function rowClick(row) {
-        nagivate(`/movies/data/${row.data.title}`, {state: {data: row.data.imdbid}});
+        navigate(`/movies/data/${row.data.title}`, {state: {data: row.data.imdbid}});
     }
     
 
