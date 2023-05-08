@@ -41,23 +41,34 @@ function People() {
         setVisible(true);
     };
 
-    ChartJS.register(
-        CategoryScale,
-        LinearScale,
-        PointElement,
-        LineElement,
-        Title,
-        Tooltip,
-    );
-    const options = {
-        responsive: true,
-        plugins: {
-            title: {
-            display: true,
-            text: `${personInfo.name}'s performance at a galance`,
-            },
-        },
-    };
+    async function handleToken(message) {
+      const bearerToken = localStorage.getItem("bearerToken");
+      const refreshToken = localStorage.getItem("refreshToken");
+
+      if (!bearerToken && message === "Invalid JWT token") {
+        setMesssage("You need to login to access individual person's information")
+      } else if (bearerToken && message === "JWT token has expired") {
+          try {
+            const response = await fetch('http://sefdb02.qut.edu.au:3000/user/refresh', {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ refreshToken }),
+          });
+
+          if (response.ok) {
+            const data = response.json();
+            localStorage.setItem("bearerToken", data.bearerToken.token);
+            localStorage.setItem("refreshToken", data.refreshToken.token);
+          } else {
+            setMesssage("Your session has expired, you need to re-login.")
+            //throw new Error(`Error refreshing access token: ${response.status}`);
+          } 
+        } catch (error) {
+          console.error("Error refreshing access token:", error);
+        }}
+    }
 
     const labels = Array.from({ length: ratings.length }, (_, i) => 1 + i);
 
@@ -72,56 +83,71 @@ function People() {
         ],
       };
 
-    useEffect(() => {
-        const url = `http://sefdb02.qut.edu.au:3000/people/${id}`;
-      
-        const fetchData = async () => {
-          try {
-            const response = await fetch(url, {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${bearerToken}`,
-              },
-            });
-      
-            const data = await response.json();
+      useEffect(() => {
+        fetch(`http://sefdb02.qut.edu.au:3000/people/${id}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${bearerToken}`,
+            },
+        })
+        .then(async (response) => {
+          const data = await response.json(); 
 
-            if (response.status === 401) {
-                setMesssage("You need to log in to access staff information.")
-                toggleAlert();
-                setAlertColour("warning")
-            } else if (response.status === 404) {
-                setMesssage("No record exists of a person with this ID")
-                toggleAlert();
-                setAlertColour("warning")
-            }
-
-            setPersonInfo(data);
-            setRatings(data.roles.map((movie) => {
-                return movie.imdbRating;
-            }))
-      
-          } catch (error) {
-            setError(error);
-          } finally {
+          if (response.status !== 200) {
+              toggleAlert()
+              setAlertColour("warning")
+              handleToken(data.message)
+          } 
+          return data;
+        })
+        .then((data) => {
+          
+          setPersonInfo(data);
+          setRatings(data.roles.map((movie) => {
+            return movie.imdbRating;
+          }))
+          
+        })
+        .catch(error => {
+          setError(error);
+        })
+        .finally(() => {
             setIsLoading(false);
-          }
-        };
-
-        fetchData();
-      }, [bearerToken, id]);
-      
+        })  
+    }, [bearerToken, id, alertColour, message, navigate, visible]);
 
     if (isLoading) {
-        return <p>Loading movies... ...</p>;
+      return <p>Loading movies... ...</p>;
     }
 
     if (error) {
-        return <p>Error: {error}</p>;
+      return (
+        <Notification 
+            message={message}
+            visible={visible}
+            alertColour={alertColour}
+        />
+      )
     }
 
-    console.log(ratings);
+    ChartJS.register(
+      CategoryScale,
+      LinearScale,
+      PointElement,
+      LineElement,
+      Title,
+      Tooltip,
+    );
+    const options = {
+        responsive: true,
+        plugins: {
+            title: {
+            display: true,
+            text: `${personInfo.name}'s performance at a galance`,
+            },
+        },
+    };
 
     return (
         <div className="Container">

@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Notification from "../components/Notification";
 import 'bootstrap/dist/css/bootstrap.css';
-import { Alert, Card, Button, Modal, ModalFooter, FormGroup, ModalBody, Input, Label, CardBody } from 'reactstrap'
+import { Card, Button, FormGroup, Input, Label, CardBody } from 'reactstrap'
+import { useAuth } from "../components/AuthenticationContext";
 
 function Login() {
+    const { setIsLoggedIn } = useAuth();
     const [ email, setEmail ] = useState('');
     const [ password, setPassword ] = useState('');
     const [ buttonColour, setButtonColour ] = useState('danger');
@@ -46,11 +48,13 @@ function Login() {
         if (response.status === 401) {
             setMesssage("Incorrect email or password");
             setAlertColour("warning")
+            setIsLoggedIn(false);
           } else if (response.status === 200) {
             setMesssage("Log in successful");
             setAlertColour("primary")
             localStorage.setItem("bearerToken", data.bearerToken.token);
             localStorage.setItem("refreshToken", data.refreshToken.token);
+            setIsLoggedIn(true);
           } else {
             throw new Error(`Request failed with status code ${response.status}`);
           }
@@ -68,9 +72,6 @@ function Login() {
                 visible={visible}
                 alertColour={alertColour}
             />
-            {/* <Alert color={alertColour} isOpen={visible}>
-                {message}
-            </Alert> */}
             <Card
                 style={{
                     width: '40vw'
