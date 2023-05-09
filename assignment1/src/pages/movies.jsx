@@ -27,7 +27,6 @@ function Movies() {
         navigate(`/movies/data/${row.data.title}`, {state: {data: row.data.imdbid}});
     }
     
-
     if (isLoading) {
         return <p>Loading movies... ...</p>;
     }
@@ -46,7 +45,7 @@ function Movies() {
                     pagination={true}
                     paginationPageSize={15}
                     onRowClicked={(row) => rowClick(row)}
-                    
+                    rowModelType='infinite'
                 />
             </div>
     </div>

@@ -1,9 +1,23 @@
 import { Link } from 'react-router-dom';
-import "./Nav.css";
 import { useAuth } from './AuthenticationContext';
+import {
+    Collapse,
+    Navbar,
+    NavbarToggler,
+    NavbarBrand,
+    Nav,
+    NavItem,
+    NavLink,
+  } from 'reactstrap';
+import React, { useState } from 'react';
+import 'bootstrap/dist/css/bootstrap.css';
 
 function Navigation() {
-    const { isLoggedIn, setIsLoggedIn } = useAuth();    
+    const { isLoggedIn, setIsLoggedIn } = useAuth();   
+    const [ isOpen, setIsOpen ] = useState(false);
+
+    const toggle = () => setIsOpen(!isOpen);
+    
 
     function handleLogout() {
         const refreshToken = localStorage.getItem("refreshToken");
@@ -26,28 +40,36 @@ function Navigation() {
     }
 
     return (
-        <div className="Nav">
-            <ul className="NavList">
-                <li>
-                    <Link className="NavLink" to="/"> Home </Link>
-                </li>
-                <li>
-                    <Link className="NavLink" to="/movies"> Movies </Link>
-                </li>
-                {
-                    isLoggedIn ? (
-                        <li>
-                            <Link className="NavLink" to="/login" onClick={handleLogout}> Logout </Link>
-                        </li> ) : (
-                        <li>
-                            <Link className="NavLink" to="/login"> Login </Link>
-                        </li>
-                    )
-                }
-                <li>
-                    <Link className="NavLink" to="/register"> Register </Link>
-                </li>
-            </ul>
+        <div className="Nav" style={{width: '100%', marginBottom: '2vh'}}>
+            <Navbar color="dark" dark expand="md" >
+                <NavbarBrand >Johnny Yang</NavbarBrand>
+                <NavbarToggler onClick={toggle} />
+                <Collapse isOpen={isOpen} navbar>
+                    <Nav navbar horizontal='center'>
+                        <NavItem>
+                            <NavLink className="NavLink" tag={Link} to="/"> Home </NavLink>
+                        </NavItem>
+                        <NavItem>
+                            <NavLink className="NavLink" tag={Link} to="/movies"> Movies </NavLink>
+                        </NavItem>
+                        <NavItem>
+                            {
+                                isLoggedIn ? (
+                                    <li>
+                                        <NavLink className="NavLink" tag={Link} to="/login" onClick={handleLogout}> Logout </NavLink>
+                                    </li> ) : (
+                                    <li>
+                                        <NavLink className="NavLink" tag={Link} to="/login"> Login </NavLink>
+                                    </li>
+                                )
+                            }
+                        </NavItem>
+                        <NavItem>
+                            <NavLink className="NavLink" tag={Link} to="/register"> Register </NavLink>
+                        </NavItem>
+                    </Nav>
+                </Collapse>
+            </Navbar>
         </div>
     )
 }

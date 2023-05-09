@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Notification from "../components/Notification";
 import { useNavigate, useLocation } from "react-router-dom";
 import { AgGridReact } from 'ag-grid-react';
-import { Button } from "reactstrap";
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -38,7 +37,7 @@ function People() {
     ];
 
     function toggleAlert () {
-        setVisible(true);
+      setVisible(true);
     };
 
     async function handleToken(message) {
@@ -63,7 +62,6 @@ function People() {
             localStorage.setItem("refreshToken", data.refreshToken.token);
           } else {
             setMesssage("Your session has expired, you need to re-login.")
-            //throw new Error(`Error refreshing access token: ${response.status}`);
           } 
         } catch (error) {
           console.error("Error refreshing access token:", error);
@@ -93,16 +91,15 @@ function People() {
         })
         .then(async (response) => {
           const data = await response.json(); 
-
           if (response.status !== 200) {
               toggleAlert()
               setAlertColour("warning")
+              console.log("test");
               handleToken(data.message)
           } 
           return data;
         })
         .then((data) => {
-          
           setPersonInfo(data);
           setRatings(data.roles.map((movie) => {
             return movie.imdbRating;
@@ -113,7 +110,7 @@ function People() {
           setError(error);
         })
         .finally(() => {
-            setIsLoading(false);
+          setIsLoading(false);
         })  
     }, [bearerToken, id, alertColour, message, navigate, visible]);
 
@@ -150,18 +147,7 @@ function People() {
     };
 
     return (
-        <div className="Container">
-            <div className="Notifications">
-                <Notification 
-                    message={message}
-                    visible={visible}
-                    alertColour={alertColour}
-                />
-                <Button style={{display: visible ? 'block' : 'none' }} onClick={() => navigate(`/login`)}>
-                    Login
-                </Button>
-            </div>
-            
+        <div className="Container">          
             <div>
                 <h2>{personInfo.name}</h2>
                 <b>{personInfo.birthYear} - {personInfo.deathYear}</b>
