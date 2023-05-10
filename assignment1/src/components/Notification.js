@@ -1,6 +1,6 @@
-import React, { useState} from "react";
+import React from "react";
 import 'bootstrap/dist/css/bootstrap.css';
-import {  Alert } from 'reactstrap';
+import { Alert } from 'reactstrap';
 
 function Notification({ message, visible, alertColour }) {
 

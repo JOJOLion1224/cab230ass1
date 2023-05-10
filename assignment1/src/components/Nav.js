@@ -17,7 +17,7 @@ function Navigation() {
     const [ isOpen, setIsOpen ] = useState(false);
 
     const toggle = () => setIsOpen(!isOpen);
-    
+    const email = localStorage.getItem("email");
 
     function handleLogout() {
         const refreshToken = localStorage.getItem("refreshToken");
@@ -37,6 +37,7 @@ function Navigation() {
         }
         localStorage.removeItem('bearerToken');
         localStorage.removeItem('refreshToken');
+        localStorage.removeItem('email');
     }
 
     return (
@@ -56,7 +57,7 @@ function Navigation() {
                             {
                                 isLoggedIn ? (
                                     <li>
-                                        <NavLink className="NavLink" tag={Link} to="/login" onClick={handleLogout}> Logout </NavLink>
+                                        <NavLink className="NavLink" tag={Link} to="/login" onClick={handleLogout}> Logout:  {email} </NavLink>
                                     </li> ) : (
                                     <li>
                                         <NavLink className="NavLink" tag={Link} to="/login"> Login </NavLink>

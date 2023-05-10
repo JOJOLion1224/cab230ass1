@@ -15,6 +15,7 @@ export default function Movie() {
     const [ movieInfo, setMovieInfo ] = useState([]);
     const [ staffInfo, setStaffInfo ] = useState([]);
 
+    const genreColours = [ "primary", "secondary", "success", "danger", "warning", "info",  "light",  "dark"];
 
     useEffect (() => {
         fetch(`http://sefdb02.qut.edu.au:3000/movies/data/${id}`)    
@@ -32,7 +33,7 @@ export default function Movie() {
     }, [id])
 
     if (isLoading) {
-        return <p>Loading movies... ...</p>;
+        return <p>Loading information... ...</p>;
     }
 
     if (error) {
@@ -53,15 +54,19 @@ export default function Movie() {
     ];
 
     function rowClick(row) {
-
         navigate(`/people/${row.data.id}`, {state: {data: row.data.id}});
+    }
+
+    const randomColour=()=> {
+        const randomIndex = Math.floor(Math.random() * genreColours.length);
+        return genreColours[randomIndex];
     }
 
     return (
         <div className="container">
             <div 
                 className="informationContainer"
-                style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}
+                style={{ display: 'flex', flexDirection: 'row', marginBottom: '2vh', justifyContent: 'center'}}
             >
                 <div className="information">
                     <h3>{movieInfo.title}</h3>
@@ -76,7 +81,7 @@ export default function Movie() {
                             Genres: 
                             {movieInfo.genres.map(
                                 (genre)=> 
-                                <Badge key={genre} style={{ marginLeft: '1vw' }}>
+                                <Badge key={genre} style={{ marginLeft: '1vw' }} color={randomColour()} pill>
                                     {genre}
                                 </Badge>)}
                         </ListGroupItem>
@@ -102,13 +107,14 @@ export default function Movie() {
                 </div>
             </div>
             
-            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-                <div className="ag-theme-alpine" style={{ height: '50vh', width: '65vw'}}>
+            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+                <div className="ag-theme-alpine" style={{ height: '50vh', width: '32vw'}}>
                     <AgGridReact 
                         columnDefs={columns}
                         rowData={staffInfo}
                         pagination={true}
                         paginationPageSize={15}
+                        resizable={true}
                         onRowClicked={(row) => rowClick(row)}
                     />              
                 </div>

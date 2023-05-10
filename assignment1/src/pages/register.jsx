@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import 'bootstrap/dist/css/bootstrap.css';
-import { Card, Button, Modal, ModalFooter, FormGroup, ModalBody, Input, Label, CardBody } from 'reactstrap'
+import { Card, Button, FormGroup, Input, Label, CardBody } from 'reactstrap'
+import Notification from "../components/Notification";
 
 function Register() {
     const [ email, setEmail ] = useState('');
     const [ password, setPassword ] = useState('');
     const [ secondPassword, setSecondPassword ] = useState('');
     const [ buttonColour, setButtonColour ] = useState('danger');
-    const [ modal, setModal ] = useState(false);
     const [ message, setMessage ] = useState([]);
+    const [ visible, setVisible ] = useState(false);
+    const [ alertColour, setAlertColour ] = useState("primary");
 
     useEffect(() => {
         if (email && password && secondPassword && password === secondPassword) {
@@ -17,6 +19,19 @@ function Register() {
             setButtonColour('danger');
         }
     }, [email, password, secondPassword])
+
+    function toggleAlert () {
+        if (message==="User created") {
+            setAlertColour("primary")
+        } else if (message==="User already exists") {
+            setAlertColour("warning")
+        }
+        setVisible(true);
+ 
+        setTimeout(() => {
+          setVisible(false);
+        }, 3000);
+    };
 
     function registerAPI() {
         const url = 'http://sefdb02.qut.edu.au:3000/user/register';
@@ -40,13 +55,14 @@ function Register() {
                 })
         )
     }
-    
-    function toggleModal() {
-        setModal(!modal);
-    }
 
     return (
         <div className="Container">
+            <Notification 
+                message={message}
+                visible={visible}
+                alertColour={alertColour}
+            />
             <Card
                 style={{
                     width: '40vw'
@@ -100,23 +116,12 @@ function Register() {
                     <Button 
                         color={buttonColour} 
                         disabled={buttonColour === 'danger'}
-                        onClick={() => {registerAPI(); toggleModal();}}
+                        onClick={() => {registerAPI(); toggleAlert();}}
                     >
                         Submit
                     </Button>
                 </CardBody>
             </Card>
-
-            <Modal isOpen={modal} toggle={toggleModal}>
-                <ModalBody>
-                    <h2>{message}</h2> 
-                </ModalBody>
-                <ModalFooter>
-                <Button color="primary" onClick={toggleModal}>
-                    Close
-                </Button>
-                </ModalFooter>
-            </Modal>
         </div>
     )
 }

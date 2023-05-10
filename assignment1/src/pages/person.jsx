@@ -94,7 +94,6 @@ function People() {
           if (response.status !== 200) {
               toggleAlert()
               setAlertColour("warning")
-              console.log("test");
               handleToken(data.message)
           } 
           return data;
@@ -136,14 +135,15 @@ function People() {
       Title,
       Tooltip,
     );
+
     const options = {
         responsive: true,
-        plugins: {
-            title: {
-            display: true,
-            text: `${personInfo.name}'s performance at a galance`,
-            },
-        },
+        // plugins: {
+        //     title: {
+        //     display: true,
+        //     text: `${personInfo.name}'s performance at a galance`,
+        //     },
+        // },
     };
 
     return (
@@ -152,7 +152,7 @@ function People() {
                 <h2>{personInfo.name}</h2>
                 <b>{personInfo.birthYear} - {personInfo.deathYear}</b>
             </div>
-            <div className="ag-theme-alpine" style={{ height: '50vh', width: '65vw'}}>
+            <div className="ag-theme-alpine" style={{ height: '50vh', width: '42vw'}}>
                 <AgGridReact 
                     columnDefs={columns}
                     rowData={personInfo.roles}
@@ -160,7 +160,8 @@ function People() {
                     paginationPageSize={15}
                 />              
             </div>
-            <div className="">
+            <div className="Chart">
+                <h3>{personInfo.name}'s performance trend at a galance</h3>
                 <Line options={options} data={chartData} />
             </div>
         </div>

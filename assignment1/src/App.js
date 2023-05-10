@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useState } from 'react';
 import './App.css';
 
 import { AuthProvider } from "./components/AuthenticationContext";
@@ -14,8 +13,6 @@ import Login from "./pages/login";
 import People from "./pages/person";
 
 function App() {
-  const [ isLoggedIn, setIsLoggedIn ] = useState(false);
-
   return (
     <AuthProvider>
       <BrowserRouter> 

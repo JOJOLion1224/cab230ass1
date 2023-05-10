@@ -20,7 +20,7 @@ function Movies() {
             { headerName: 'RottenTomatoes', field: 'rottentomatoes', sortable: true, filter: "agNumberColumnFilter"},
             { headerName: 'Metacritic', field: 'metacritic', sortable: true, filter: "agNumberColumnFilter"},
             { headerName: 'Rated', field: 'rated', sortable: true, filter: true},
-            { headerName: 'IMDBID', field: 'imdbid'}
+            { headerName: 'IMDBID', field: 'imdbid', hide: true}
     ]
 
     function rowClick(row) {
@@ -45,7 +45,6 @@ function Movies() {
                     pagination={true}
                     paginationPageSize={15}
                     onRowClicked={(row) => rowClick(row)}
-                    rowModelType='infinite'
                 />
             </div>
     </div>

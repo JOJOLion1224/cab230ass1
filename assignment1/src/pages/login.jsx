@@ -54,6 +54,7 @@ function Login() {
             setAlertColour("primary")
             localStorage.setItem("bearerToken", data.bearerToken.token);
             localStorage.setItem("refreshToken", data.refreshToken.token);
+            localStorage.setItem("email", email);
             setIsLoggedIn(true);
           } else {
             throw new Error(`Request failed with status code ${response.status}`);
@@ -62,6 +63,14 @@ function Login() {
           setError(error);
         } finally {
           setIsLoading(false);
+        }
+
+        if (isLoading) {
+            return <p>Logging in... ...</p>;
+        }
+    
+        if (error) {
+            return <p>Error: {error}</p>;
         }
     }
     

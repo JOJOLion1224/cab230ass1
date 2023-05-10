@@ -7,7 +7,7 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }) {
-    const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    const [ isLoggedIn, setIsLoggedIn ] = useState(() => {
         const bearerToken = localStorage.getItem('bearerToken');
         const refreshToken = localStorage.getItem('refreshToken');
         return !!(bearerToken && refreshToken);
