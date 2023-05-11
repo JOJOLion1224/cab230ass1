@@ -51,7 +51,9 @@ function SearchBar(props) {
                     toggle={function noRefCheck(){}}
                 >
                     <Dropdown isOpen={toggleDropDown} toggle={toggle}>
-                        <DropdownToggle caret>{innerSelectedYear || "Any Year"}</DropdownToggle>
+                        <DropdownToggle caret>
+                            {innerSelectedYear || "Any Year"}
+                        </DropdownToggle>
                         <DropdownMenu style={{ maxHeight: "200px", overflowY: "scroll" }}>
                             <DropdownItem onClick={() => setInnerSelectedYear("")}>
                             Any Year

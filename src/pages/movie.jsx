@@ -15,7 +15,15 @@ export default function Movie() {
     const [ movieInfo, setMovieInfo ] = useState([]);
     const [ staffInfo, setStaffInfo ] = useState([]);
 
-    const genreColours = [ "primary", "secondary", "success", "danger", "warning", "info",  "light",  "dark"];
+    const genreColours = [ 
+        "primary", 
+        "secondary", 
+        "success", 
+        "danger", 
+        "warning", 
+        "info",   
+        "dark"
+    ];
 
     useEffect (() => {
         fetch(`http://sefdb02.qut.edu.au:3000/movies/data/${id}`)    
@@ -40,12 +48,6 @@ export default function Movie() {
         return <p>Error: {error}</p>;
     }
 
-    const altText = "Movie poster for " + movieInfo.title;
-
-    function divideNumber(n) {
-        return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    };
-
     const columns = [
         { headerName: 'Role', field: 'category', sortable: true, filter: true},
         { headerName: 'Name', field: 'name', sortable: true, filter: true},
@@ -66,7 +68,12 @@ export default function Movie() {
         <div className="container">
             <div 
                 className="informationContainer"
-                style={{ display: 'flex', flexDirection: 'row', marginBottom: '2vh', justifyContent: 'center'}}
+                style={{ 
+                    display: 'flex', 
+                    flexDirection: 'row', 
+                    marginBottom: '2vh', 
+                    justifyContent: 'center'
+                }}
             >
                 <div className="information">
                     <h3>{movieInfo.title}</h3>
@@ -81,7 +88,12 @@ export default function Movie() {
                             Genres: 
                             {movieInfo.genres.map(
                                 (genre)=> 
-                                <Badge key={genre} style={{ marginLeft: '1vw' }} color={randomColour()} pill>
+                                <Badge 
+                                    key={genre} 
+                                    style={{ marginLeft: '1vw' }} 
+                                    color={randomColour()} 
+                                    pill
+                                >
                                     {genre}
                                 </Badge>)}
                         </ListGroupItem>
@@ -89,7 +101,7 @@ export default function Movie() {
                             Country: {movieInfo.country}
                         </ListGroupItem>
                         <ListGroupItem>
-                            Box Office: ${divideNumber(movieInfo.boxoffice)}
+                            Box Office: ${movieInfo.boxoffice.toLocaleString()}
                         </ListGroupItem>
                         <ListGroupItem>
                             <i>
@@ -102,13 +114,20 @@ export default function Movie() {
                 <div style={{ marginLeft: '3vw' }}>
                     <img 
                         style={{height: '300px', width: 'auto'}} 
-                        src={movieInfo.poster} alt={altText}
+                        src={movieInfo.poster} alt={"Movie poster for " + movieInfo.title}
                     />
                 </div>
             </div>
             
-            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                <div className="ag-theme-alpine" style={{ height: '50vh', width: '32vw'}}>
+            <div 
+                style={{ 
+                    display: 'flex', 
+                    flexDirection: 'row', 
+                    justifyContent: 'center'}}
+            >
+                <div className="ag-theme-alpine" 
+                    style={{ height: '50vh', width: '32vw'}}
+                >
                     <AgGridReact 
                         columnDefs={columns}
                         rowData={staffInfo}

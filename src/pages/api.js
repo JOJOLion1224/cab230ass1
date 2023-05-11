@@ -7,7 +7,8 @@ function useMovies(text = '', year = '') {
 
     useEffect(() => {
         const titleParam = text ? `title=${encodeURIComponent(text)}` : '';
-        const yearParam = year && year !== 'any year' ? `year=${encodeURIComponent(year)}` : '';
+        const yearParam = year && year !== 'any year' ? 
+            `year=${encodeURIComponent(year)}` : '';
         const queryParams = [titleParam, yearParam].filter(Boolean).join('&');
 
         fetch(`http://sefdb02.qut.edu.au:3000/movies/search?${queryParams}`)    

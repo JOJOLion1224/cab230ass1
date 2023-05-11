@@ -36,17 +36,17 @@ function People() {
         { headerName: 'Character/s', field: 'characters', sortable: true, filter: true}
     ];
 
-    function toggleAlert () {
-      setVisible(true);
-    };
-
     async function handleToken(message) {
       const bearerToken = localStorage.getItem("bearerToken");
       const refreshToken = localStorage.getItem("refreshToken");
 
+      // triggers when not logged in
       if (!bearerToken && message === "Invalid JWT token") {
         setMesssage("You need to login to access individual person's information")
+
+      // triggers if the current bearer token has expired
       } else if (bearerToken && message === "JWT token has expired") {
+          // attempts to refresh the bearer token using the refresh token
           try {
             const response = await fetch('http://sefdb02.qut.edu.au:3000/user/refresh', {
               method: "POST",
@@ -56,11 +56,13 @@ function People() {
               body: JSON.stringify({ refreshToken }),
           });
 
+          // if refresh token works
           if (response.ok) {
             const data = response.json();
             localStorage.setItem("bearerToken", data.bearerToken.token);
             localStorage.setItem("refreshToken", data.refreshToken.token);
           } else {
+            // if not
             setMesssage("Your session has expired, you need to re-login.")
           } 
         } catch (error) {
@@ -68,6 +70,7 @@ function People() {
         }}
     }
 
+    // create an Arrry with length equals to the number of movies
     const labels = Array.from({ length: ratings.length }, (_, i) => 1 + i);
 
     const chartData = {
@@ -81,36 +84,37 @@ function People() {
         ],
       };
 
-      useEffect(() => {
-        fetch(`http://sefdb02.qut.edu.au:3000/people/${id}`, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${bearerToken}`,
-            },
-        })
-        .then(async (response) => {
-          const data = await response.json(); 
-          if (response.status !== 200) {
-              toggleAlert()
-              setAlertColour("warning")
-              handleToken(data.message)
-          } 
-          return data;
-        })
-        .then((data) => {
-          setPersonInfo(data);
-          setRatings(data.roles.map((movie) => {
-            return movie.imdbRating;
-          }))
-          
-        })
-        .catch(error => {
-          setError(error);
-        })
-        .finally(() => {
-          setIsLoading(false);
-        })  
+    useEffect(() => {
+      fetch(`http://sefdb02.qut.edu.au:3000/people/${id}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${bearerToken}`,
+          },
+      })
+      .then(async (response) => {
+        const data = await response.json();
+
+        // when there is an error
+        if (response.status !== 200) {
+            setVisible(true)
+            setAlertColour("warning")
+            handleToken(data.message)
+        } 
+        return data;
+      })
+      .then((data) => {
+        setPersonInfo(data);
+        setRatings(data.roles.map((movie) => {
+          return movie.imdbRating;
+          })
+        )})
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      })  
     }, [bearerToken, id, alertColour, message, navigate, visible]);
 
     if (isLoading) {
@@ -146,7 +150,10 @@ function People() {
                 <h2>{personInfo.name}</h2>
                 <b>{personInfo.birthYear} - {personInfo.deathYear}</b>
             </div>
-            <div className="ag-theme-alpine" style={{ height: '50vh', width: '42vw'}}>
+            <div 
+              className="ag-theme-alpine" 
+              style={{ height: '50vh', width: '42vw'}}
+            >
                 <AgGridReact 
                     columnDefs={columns}
                     rowData={personInfo.roles}
@@ -154,7 +161,14 @@ function People() {
                     paginationPageSize={15}
                 />              
             </div>
-            <div className="Chart" style={{ marginTop: "1vh", marginBottom: "2vh", height: '30vh', width: '42vw'}}>
+            <div 
+              className="Chart" 
+              style={{ 
+                marginTop: "1vh", 
+                marginBottom: "2vh", 
+                height: '30vh', 
+                width: '42vw'
+              }}>
                 <h4>{personInfo.name}'s performance trend at a galance</h4>
                 <Line options={options} data={chartData} />
             </div>

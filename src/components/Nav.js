@@ -48,21 +48,40 @@ function Navigation() {
                 <Collapse isOpen={isOpen} navbar>
                     <Nav navbar horizontal='center'>
                         <NavItem>
-                            <NavLink className="NavLink" tag={Link} to="/"> Home </NavLink>
+                            <NavLink className="NavLink" tag={Link} to="/"> 
+                                Home 
+                            </NavLink>
                         </NavItem>
                         <NavItem>
-                            <NavLink className="NavLink" tag={Link} to="/movies"> Movies </NavLink>
+                            <NavLink className="NavLink" tag={Link} to="/movies"> 
+                                Movies 
+                            </NavLink>
                         </NavItem>
                         <NavItem>
                             {
-                                isLoggedIn ? (
-                                    <NavLink className="NavLink" tag={Link} to="/login" onClick={handleLogout}> Logout:  {email} </NavLink> ) : (
-                                    <NavLink className="NavLink" tag={Link} to="/login"> Login </NavLink>
-                                )
+                                isLoggedIn ? 
+                                (<NavLink 
+                                    className="NavLink" 
+                                    tag={Link} to="/login" 
+                                    onClick={handleLogout}> 
+                                    Logout:  {email} 
+                                </NavLink> ) 
+                                    : 
+                                (<NavLink 
+                                    className="NavLink" 
+                                    tag={Link} 
+                                    to="/login"> 
+                                    Login 
+                                </NavLink>)
                             }
                         </NavItem>
                         <NavItem>
-                            <NavLink className="NavLink" tag={Link} to="/register"> Register </NavLink>
+                            <NavLink 
+                                className="NavLink" 
+                                tag={Link} 
+                                to="/register"> 
+                                Register 
+                            </NavLink>
                         </NavItem>
                     </Nav>
                 </Collapse>

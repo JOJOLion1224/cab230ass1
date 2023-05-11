@@ -25,7 +25,9 @@ function Home() {
                     color: "white",
                 }}
             >
-                <h1  style={{color: "white", fontWeight: "bold"}}>Welcome to Johnny Yang's Movie Collection.</h1>
+                <h1  style={{color: "white", fontWeight: "bold"}}>
+                    Welcome to Johnny Yang's Movie Collection.
+                </h1>
             </div>
         </div>
         
